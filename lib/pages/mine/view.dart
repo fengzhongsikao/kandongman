@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MyPage extends ConsumerWidget {
-  const MyPage({super.key});
+class MinePage extends ConsumerWidget {
+  const MinePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

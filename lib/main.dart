@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kandongman/pages/My/view.dart';
+import 'package:kandongman/pages/mine/view.dart';
 import 'pages/Home/view.dart';
 import 'package:go_router/go_router.dart';
 
@@ -47,7 +47,7 @@ final _router = GoRouter(
               name: 'mine',
               path: '/mine',
               builder: (context, state) {
-                return const MyPage();
+                return const MinePage();
               }),
         ]),
       ],
