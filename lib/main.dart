@@ -1,27 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'pages/HomeTab/view.dart';
+import 'package:kandongman/pages/My/view.dart';
+import 'pages/Home/view.dart';
 import 'package:go_router/go_router.dart';
 
+import 'pages/classification/view.dart';
+import 'pages/Main/view.dart';
+
 void main() {
-  runApp(ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-final GoRouter _router = GoRouter(
+final _sectionNavigatorKey = GlobalKey<NavigatorState>();
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
+final _router = GoRouter(
+  navigatorKey: _rootNavigatorKey,
+  initialLocation: '/home',
   routes: <RouteBase>[
-    GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) {
-        return const HomeTabPage();
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return MainPage(navigationShell);
       },
-      // routes: <RouteBase>[
-      //   GoRoute(
-      //     path: 'details',
-      //     builder: (BuildContext context, GoRouterState state) {
-      //       return const DetailsScreen();
-      //     },
-      //   ),
-      // ],
+      branches: [
+        StatefulShellBranch(
+          navigatorKey: _sectionNavigatorKey,
+          routes: <RouteBase>[
+            GoRoute(
+                name: 'home',
+                path: '/home',
+                builder: (context, state) {
+                  return const Home();
+                }),
+          ],
+        ),
+        StatefulShellBranch(routes: <RouteBase>[
+          GoRoute(
+              name: 'classification',
+              path: '/classification',
+              builder: (context, state) {
+                return const ClassificationPage();
+              }),
+        ]),
+        StatefulShellBranch(routes: <RouteBase>[
+          GoRoute(
+              name: 'mine',
+              path: '/mine',
+              builder: (context, state) {
+                return const MyPage();
+              }),
+        ]),
+      ],
     ),
   ],
 );
@@ -37,13 +66,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-// return MaterialApp(
-//       title: 'Flutter Demo',
-//       theme: ThemeData(
-//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-//         useMaterial3: true,
-//       ),
-//       home: const HomeTabPage(),
-//     );

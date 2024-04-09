@@ -7,14 +7,14 @@ final lengthProvider = Provider<int>((ref) {
   return 3;
 });
 
-class HomeTabPage extends ConsumerStatefulWidget {
-  const HomeTabPage({super.key});
+class Home extends ConsumerStatefulWidget {
+  const Home({super.key});
 
   @override
-  ConsumerState<HomeTabPage> createState() => _HomeTabPageState();
+  ConsumerState<Home> createState() => _HomeTabPageState();
 }
 
-class _HomeTabPageState extends ConsumerState<HomeTabPage>
+class _HomeTabPageState extends ConsumerState<Home>
     with SingleTickerProviderStateMixin {
   late final AutoDisposeProvider<TabController>
       recentWatchScreenTabStateTestProvider;
@@ -48,6 +48,7 @@ class _HomeTabPageState extends ConsumerState<HomeTabPage>
         ),
       ),
       body: _body(),
+      // bottomNavigationBar: _bottom(context),
     );
   }
 
