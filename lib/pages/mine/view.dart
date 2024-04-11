@@ -20,3 +20,19 @@ class MinePage extends ConsumerWidget {
     );
   }
 }
+
+
+class aaa extends ConsumerStatefulWidget {
+  const aaa({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _aaaState();
+}
+
+class _aaaState extends ConsumerState<aaa> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}

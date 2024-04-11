@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:extended_tabs/extended_tabs.dart';
+import 'package:kandongman/pages/home/state.dart';
 
 import 'package:kandongman/widgets/button.dart';
-import 'package:http/http.dart' as http;
 
 import 'dart:developer';
-
-
-import 'package:html/parser.dart' as parser;
-import 'package:html/dom.dart' as dom;
 
 
 final lengthProvider = Provider<int>((ref) {
   return 3;
 });
+
+// final hotListProvider = StateProvider<Map<String, String>>((ref) => <String, String>{});
 
 class Home extends ConsumerStatefulWidget {
   const Home({super.key});
@@ -29,6 +27,8 @@ class _HomeTabPageState extends ConsumerState<Home>
   late final AutoDisposeProvider<TabController>
       recentWatchScreenTabStateTestProvider;
 
+  // var hotList=<String,String>{};
+
   @override
   void initState() {
     recentWatchScreenTabStateTestProvider = Provider.autoDispose(
@@ -37,13 +37,12 @@ class _HomeTabPageState extends ConsumerState<Home>
         vsync: this,
       ),
     );
+
     super.initState();
-    fetch();
+
   }
 
   List tabs = ["推荐", "日漫", "国漫"];
-
-  var hotList=<String,String>{};
 
   @override
   Widget build(BuildContext context) {
@@ -67,26 +66,30 @@ class _HomeTabPageState extends ConsumerState<Home>
 
   _body() {
     final tabController = ref.watch(recentWatchScreenTabStateTestProvider);
+    AsyncValue<Map<String, String>> hotList = ref.watch(hotListProvider);
     return TabBarView(controller: tabController, children: [
-      hotList.isNotEmpty?
+
+
+          // Text("${hotList.value.runtimeType}"),
+      hotList.value!=null?
       GridView.builder(
-          gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
             childAspectRatio: 0.6,
           ),
-          itemCount: hotList.keys.length,
+          itemCount: hotList.value?.keys.length,
           itemBuilder: (_, int index) {
-            var keys=hotList.keys.toList();
-            return gridList(keys,index);
+            var keys = hotList.value?.keys.toList();
+            return gridList(keys!, index);
           }):const Center(child: CircularProgressIndicator()),
+      //
 
       // Container(
       //   child: Column(
       //     children: [
       //       myCustomButton(
       //         onTap: () async {
-      //           await fetch();
+      //
       //         },
       //         title: "点击",
       //         width: 100,
@@ -104,7 +107,7 @@ class _HomeTabPageState extends ConsumerState<Home>
     ]);
   }
 
-  gridList(List<String> keys,int index){
+  gridList(List<String> keys, int index) {
     return Container(
       color: Colors.yellow,
       width: 100,
@@ -115,31 +118,5 @@ class _HomeTabPageState extends ConsumerState<Home>
         ],
       ),
     );
-  }
-
-
-  Future<void> fetch() async {
-    String urlString = 'https://9ciyuan.com';
-    Uri uri = Uri.parse(urlString);
-    http.Response response = await http.get(uri);
-    if (response.statusCode == 200) {
-      // 请求成功，打印响应内容
-      log("hahah------${response.body}");
-      var document = parser.parse(response.body);
-      List<dom.Element> liTags=document.getElementsByClassName('swiper-wrapper');
-      for (var li in liTags) {
-        List<dom.Element> divs= li.querySelectorAll('div');
-        for (var div in divs) {
-          if (div.classes.contains('pic')) {
-            var picDiv=div.querySelector("a")?.querySelector("div");
-            var name=div.querySelector("a")?.attributes['title'];
-            print("div------${picDiv?.attributes['data-background']}");
-            var hotUrl=picDiv?.attributes['data-background'];
-            hotList['$name']=hotUrl!;
-          }
-        }
-
-      }
-    }
   }
 }
