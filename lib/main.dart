@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import 'pages/classification/view.dart';
 import 'pages/Main/view.dart';
+import 'pages/videodetails/view.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -31,7 +32,9 @@ final _router = GoRouter(
                 path: '/home',
                 builder: (context, state) {
                   return const Home();
-                }),
+                },
+
+            ),
           ],
         ),
         StatefulShellBranch(routes: <RouteBase>[
@@ -52,6 +55,12 @@ final _router = GoRouter(
         ]),
       ],
     ),
+    GoRoute(
+      name: 'videoDetails', // Optional, add name to your routes. Allows you navigate by name instead of path
+      path: '/home/videoDetails',
+      builder: (context, state) => VideoDetailsPage(),
+    ),
+
   ],
 );
 
@@ -66,3 +75,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+

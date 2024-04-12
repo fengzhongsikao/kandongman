@@ -43,6 +43,7 @@ dependencies:
   extended_tabs: ^4.1.0
   http: ^1.2.1
   html: ^0.15.4
+  extended_image: ^8.2.0
 
 
 dev_dependencies:
