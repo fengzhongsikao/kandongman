@@ -57,8 +57,11 @@ final _router = GoRouter(
     ),
     GoRoute(
       name: 'videoDetails', // Optional, add name to your routes. Allows you navigate by name instead of path
-      path: '/home/videoDetails',
-      builder: (context, state) => VideoDetailsPage(),
+      path: '/home/videoDetails/:href',
+      builder: (context, state){
+        final href = state.pathParameters['href'];
+        return VideoDetailsPage(href: href);
+      } ,
     ),
 
   ],

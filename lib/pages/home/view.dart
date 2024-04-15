@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:extended_tabs/extended_tabs.dart';
@@ -16,7 +17,6 @@ final lengthProvider = Provider<int>((ref) {
   return 3;
 });
 
-// final hotListProvider = StateProvider<Map<String, String>>((ref) => <String, String>{});
 
 class Home extends ConsumerStatefulWidget {
   const Home({super.key});
@@ -72,23 +72,20 @@ class _HomeTabPageState extends ConsumerState<Home>
 
   _body() {
     final tabController = ref.watch(recentWatchScreenTabStateTestProvider);
-    AsyncValue<Map<String, String>> hotList = ref.watch(hotListProvider);
+    AsyncValue<Map<String, HotLists>> hotList = ref.watch(hotListProvider);
     return TabBarView(controller: tabController, children: [
-
-
-          // Text("${hotList.value.runtimeType}"),
       hotList.value!=null?
       GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            childAspectRatio: 0.9,
+            childAspectRatio: 0.8,
           ),
           itemCount: hotList.value?.keys.length,
           itemBuilder: (_, int index) {
             var keys = hotList.value?.keys.toList();
             return gridList(keys!, index);
           }):const Center(child: CircularProgressIndicator()),
-      //
+      ///index.php/vod/detail/id/6059.html
 
       // Container(
       //   child: Column(
@@ -105,10 +102,10 @@ class _HomeTabPageState extends ConsumerState<Home>
       //   ),
       // ),
       Container(
-        child: Text("sdsdsd2"),
+        child: Text("没写"),
       ),
       Container(
-        child: Text("sdsdsd3"),
+        child: Text("没写"),
       ),
     ]);
   }
@@ -117,17 +114,12 @@ class _HomeTabPageState extends ConsumerState<Home>
    var hotList = ref.read(hotListProvider);
     return Container(
       color: Colors.white,
-      width: 100,
-      height: 150,
       child: Column(
         children: [
            GestureDetector(
              onTap: (){
-               // context.pushReplacement('/home/videoDetails');
                var router=GoRouter.of(context);
-               print("------${context.runtimeType}");
-               print("------${router.runtimeType}");
-               router.pushNamed('videoDetails');
+               router.pushNamed('videoDetails',pathParameters:{"href":hotList.value![keys[index]]!.href.toString()} );
              },
              child: Container(
                 width: 100,
@@ -136,20 +128,19 @@ class _HomeTabPageState extends ConsumerState<Home>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6.0),
                     child:ExtendedImage.network(
-                      hotList.value![keys[index]]!,
+                      hotList.value![keys[index]]!.hotImageUrl!,
                       width: 100,
                       height: 100,
                       fit: BoxFit.fill,
                       cache: true,
                       border: Border.all(color: Colors.white, width: 1.0),
-                      // borderRadius: BorderRadius.all(Radius.circular(30.0)),
                       //cancelToken: cancellationToken,
                     ),
                     // Image.network(hotList.value![keys[index]]!,fit: BoxFit.fitWidth,),),),
               ),
              ),
            ),
-          Text(keys[index]),
+          Expanded(child: Text(keys[index],maxLines: 2,softWrap: true,overflow: TextOverflow.ellipsis,)),
         ],
       ),
     );

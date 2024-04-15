@@ -6,14 +6,12 @@ import 'package:http/http.dart' as http;
 part 'state.g.dart';
 
 @riverpod
-Future<Map<String, String>> HotList(HotListRef ref) async {
+Future<Map<String, HotLists>> HotList(HotListRef ref) async {
    String urlString = 'https://9ciyuan.com';
     Uri uri = Uri.parse(urlString);
-    var hotList=<String,String>{};
+    var hotList=<String,HotLists>{};
     http.Response response = await http.get(uri);
     if (response.statusCode == 200) {
-      // 请求成功，打印响应内容
-      // log("hahah------${response.body}");
       var document = parser.parse(response.body);
       List<dom.Element> liTags =
           document.getElementsByClassName('swiper-wrapper');
@@ -23,12 +21,18 @@ Future<Map<String, String>> HotList(HotListRef ref) async {
           if (div.classes.contains('pic')) {
             var picDiv = div.querySelector("a")?.querySelector("div");
             var name = div.querySelector("a")?.attributes['title'];
-            // print("div------${picDiv?.attributes['data-background']}");
+            var href = div.querySelector("a")?.attributes['href'];
             var hotUrl = picDiv?.attributes['data-background'];
-            hotList['$name'] = hotUrl!;
+            hotList['$name'] = HotLists(hotImageUrl:hotUrl, href: urlString+href!, );
           }
         }
       }
     }
   return hotList;
+}
+
+class HotLists{
+  String? hotImageUrl;
+  String? href;
+  HotLists({required this.hotImageUrl,required this.href});
 }

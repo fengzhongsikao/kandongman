@@ -44,6 +44,7 @@ dependencies:
   http: ^1.2.1
   html: ^0.15.4
   extended_image: ^8.2.0
+  json_serializable: 6.7.1
 
 
 dev_dependencies:
@@ -61,6 +62,7 @@ dev_dependencies:
   custom_lint:
   riverpod_generator: ^2.4.0
   riverpod_lint: ^2.3.10
+  xpath_selector_html_parser: ^3.0.1
 
 analyzer:
   plugins:
