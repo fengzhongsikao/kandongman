@@ -1,15 +1,13 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:extended_tabs/extended_tabs.dart';
 import 'package:kandongman/pages/home/state.dart';
 
 import 'package:kandongman/widgets/button.dart';
 
 import 'dart:developer';
-import 'package:extended_image/extended_image.dart';
 import 'package:kandongman/widgets/search.dart';
 
 
@@ -30,8 +28,6 @@ class _HomeTabPageState extends ConsumerState<Home>
   late final AutoDisposeProvider<TabController>
       recentWatchScreenTabStateTestProvider;
 
-  // var hotList=<String,String>{};
-
   @override
   void initState() {
     recentWatchScreenTabStateTestProvider = Provider.autoDispose(
@@ -41,8 +37,8 @@ class _HomeTabPageState extends ConsumerState<Home>
       ),
     );
 
-    super.initState();
 
+    super.initState();
   }
 
   List tabs = ["推荐", "日漫", "国漫"];
@@ -50,10 +46,14 @@ class _HomeTabPageState extends ConsumerState<Home>
   @override
   Widget build(BuildContext context) {
     final tabController = ref.watch(recentWatchScreenTabStateTestProvider);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: searchBoxLess(onTap: () {}, iconColor: Colors.grey),
+        title: searchBoxLess(onTap: () {
+          var router=GoRouter.of(context);
+          router.pushNamed('search');
+        }, iconColor: Colors.grey),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(40),
           child: Column(
@@ -70,48 +70,55 @@ class _HomeTabPageState extends ConsumerState<Home>
     );
   }
 
-  _body() {
+  _body()   {
     final tabController = ref.watch(recentWatchScreenTabStateTestProvider);
-    AsyncValue<Map<String, HotLists>> hotList = ref.watch(hotListProvider);
-    return TabBarView(controller: tabController, children: [
-      hotList.value!=null?
-      GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 0.8,
-          ),
-          itemCount: hotList.value?.keys.length,
-          itemBuilder: (_, int index) {
-            var keys = hotList.value?.keys.toList();
-            return gridList(keys!, index);
-          }):const Center(child: CircularProgressIndicator()),
-      ///index.php/vod/detail/id/6059.html
 
-      // Container(
-      //   child: Column(
-      //     children: [
-      //       myCustomButton(
-      //         onTap: () async {
-      //
-      //         },
-      //         title: "点击",
-      //         width: 100,
-      //         height: 50,
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      Container(
-        child: Text("没写"),
-      ),
-      Container(
-        child: Text("没写"),
-      ),
-    ]);
+    final AsyncValue<List<HotMovie>> hotList2 =  ref.watch(hotListProvider);
+
+    return Center(
+      child: switch(hotList2){
+        AsyncData(:final value) =>TabBarView(controller: tabController, children: [
+            value.isNotEmpty?
+            GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 0.8,
+                ),
+                itemCount: value.length,
+                itemBuilder: (_, int index) {
+                  var values = value[index];
+                  return gridList(values, index);
+                }):const Center(child: CircularProgressIndicator()),
+            ///index.php/vod/detail/id/6059.html
+
+            // Container(
+            //   child: Column(
+            //     children: [
+            //       myCustomButton(
+            //         onTap: () async {
+            //
+            //         },
+            //         title: "点击",
+            //         width: 100,
+            //         height: 50,
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            Container(
+              child: Text("没写"),
+            ),
+            Container(
+              child: Text("没写"),
+            ),
+          ]),
+        AsyncError() => const Text('Oops, something unexpected happened'),
+        _ => const CircularProgressIndicator(),
+      },
+    );
   }
 
-  gridList(List<String> keys, int index) {
-   var hotList = ref.read(hotListProvider);
+  gridList(HotMovie model, int index) {
     return Container(
       color: Colors.white,
       child: Column(
@@ -119,7 +126,7 @@ class _HomeTabPageState extends ConsumerState<Home>
            GestureDetector(
              onTap: (){
                var router=GoRouter.of(context);
-               router.pushNamed('videoDetails',pathParameters:{"href":hotList.value![keys[index]]!.href.toString()} );
+               router.pushNamed('videoDetails',pathParameters:{"id":model.title!} );
              },
              child: Container(
                 width: 100,
@@ -127,20 +134,28 @@ class _HomeTabPageState extends ConsumerState<Home>
                 margin: const EdgeInsets.symmetric(horizontal: 2,vertical: 5),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6.0),
-                    child:ExtendedImage.network(
-                      hotList.value![keys[index]]!.hotImageUrl!,
+                    child:CachedNetworkImage(
+                      // "${model.cover}",
+                      httpHeaders: const {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0',
+                      },
                       width: 100,
                       height: 100,
                       fit: BoxFit.fill,
-                      cache: true,
-                      border: Border.all(color: Colors.white, width: 1.0),
+                      imageUrl: "${model.cover}",
+                      placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      errorWidget: (context, url, error) => const Center(
+                        child: Icon(Icons.error),
+                      ),
                       //cancelToken: cancellationToken,
                     ),
                     // Image.network(hotList.value![keys[index]]!,fit: BoxFit.fitWidth,),),),
               ),
              ),
            ),
-          Expanded(child: Text(keys[index],maxLines: 2,softWrap: true,overflow: TextOverflow.ellipsis,)),
+          Expanded(child: Text(model.title!,maxLines: 2,softWrap: true,overflow: TextOverflow.ellipsis,)),
         ],
       ),
     );

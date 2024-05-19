@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kandongman/pages/mine/view.dart';
+import 'package:kandongman/pages/search/view.dart';
 import 'pages/Home/view.dart';
 import 'package:go_router/go_router.dart';
 
@@ -57,10 +58,17 @@ final _router = GoRouter(
     ),
     GoRoute(
       name: 'videoDetails', // Optional, add name to your routes. Allows you navigate by name instead of path
-      path: '/home/videoDetails/:href',
+      path: '/home/videoDetails/:id',
       builder: (context, state){
-        final href = state.pathParameters['href'];
-        return VideoDetailsPage(href: href);
+        final href = state.pathParameters['id'];
+        return VideoDetailsPage(id: href);
+      } ,
+    ),
+    GoRoute(
+      name: 'search', // Optional, add name to your routes. Allows you navigate by name instead of path
+      path: '/home/search',
+      builder: (context, state){
+        return SearchPage();
       } ,
     ),
 
