@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'state.g.dart';
 
-String url= 'http://192.168.31.170:8000/hot';
+String url= 'http://192.168.31.170:8000/';
 // String url= 'http://172.18.0.163:8000';
 var hotList2=<HotMovie>[];
 final dio = Dio();

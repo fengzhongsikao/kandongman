@@ -82,7 +82,7 @@ class _HomeTabPageState extends ConsumerState<Home>
             GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  childAspectRatio: 0.8,
+                  childAspectRatio: 0.5,
                 ),
                 itemCount: value.length,
                 itemBuilder: (_, int index) {
@@ -129,8 +129,7 @@ class _HomeTabPageState extends ConsumerState<Home>
                router.pushNamed('videoDetails',pathParameters:{"id":model.title!} );
              },
              child: Container(
-                width: 100,
-                height: 100,
+                width: double.infinity,
                 margin: const EdgeInsets.symmetric(horizontal: 2,vertical: 5),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6.0),
@@ -140,7 +139,6 @@ class _HomeTabPageState extends ConsumerState<Home>
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0',
                       },
                       width: 100,
-                      height: 100,
                       fit: BoxFit.fill,
                       imageUrl: "${model.cover}",
                       placeholder: (context, url) => const Center(

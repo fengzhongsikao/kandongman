@@ -32,9 +32,7 @@ class VideoDetailsPage extends ConsumerWidget {
     return SafeArea(
       child: Center(
         child: searchInfo.when(data: (value){
-
-
-          // player.setDataSource(urlListNew, autoPlay: true);
+          player.setDataSource(value.playUrl!, autoPlay: false);
           return Column(
             children: [
               Container(
